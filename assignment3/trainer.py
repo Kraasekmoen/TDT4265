@@ -22,7 +22,11 @@ def compute_loss_and_accuracy(
     """
     average_loss = 0
     accuracy = 0
+
     # TODO: Implement this function (Task  2a)
+    loss = 0
+    batch_itr = 0
+    corrects = 0
     with torch.no_grad():
         for (X_batch, Y_batch) in dataloader:
             # Transfer images/labels to GPU VRAM, if possible
@@ -30,8 +34,16 @@ def compute_loss_and_accuracy(
             Y_batch = utils.to_cuda(Y_batch)
             # Forward pass the images through our model
             output_probs = model(X_batch)
-
             # Compute Loss and Accuracy
+            batch_itr += 1
+            loss += loss_criterion(output_probs, Y_batch)
+
+            preds = torch.argmax(output_probs, dim=1)
+            corrects += torch.sum((preds == Y_batch)).item()
+            
+        print(corrects, batch_itr, X_batch.shape[0])
+        average_loss = loss / batch_itr
+        accuracy = corrects / (batch_itr*X_batch.shape[0])
 
     return average_loss, accuracy
 

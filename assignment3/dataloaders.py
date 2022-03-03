@@ -4,6 +4,8 @@ import torch
 import typing
 import numpy as np
 import pathlib
+import ssl
+ssl._create_default_https_context = ssl._create_unverified_context
 np.random.seed(0)
 
 mean = (0.5, 0.5, 0.5)
@@ -18,8 +20,7 @@ def get_data_dir():
 
 def load_cifar10(batch_size: int, validation_fraction: float = 0.1
                  ) -> typing.List[torch.utils.data.DataLoader]:
-    # Note that transform train will apply the same transform for
-    # validation!
+    # Note that transform train will apply the same transform for validation!
     transform_train = transforms.Compose([
         transforms.ToTensor(),
         transforms.Normalize(mean, std),
